@@ -14,7 +14,7 @@ public class Test3Amazon {
     Output
     Return an integer representing the number of Treasure Truck Pop-Ups that Amazon can open in the area of Technicia.
 
-    Exmple
+    Example
     Input
         rows = 5
         column = 4
@@ -82,43 +82,38 @@ public class Test3Amazon {
     //Miramos cuántas son las mínimas conexiones necesarias para conectar todos los parques
     //que pertenecen a una zona de parque
     //Contamos los parques que están conectados y se los quitamos al número total de parques
-    public static int countParkZones(int rows, int columns, int[][] grid) {
+    private static int countParkZones(int rows, int columns, int[][] grid) {
 
         int parks = 0;
         int links = 0;
 
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < columns; j++) {
-                if(grid[i][j] == 1) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                if(grid[row][col] == 1) {
                     parks++;
 
-                    //Comprobamos si hay un parque a la derecha o debajo
-                    boolean hayDerecha = j+1 < columns && grid[i][j+1] == 1;
-                    boolean hayDebajo = i+1 < rows && grid[i+1][j] == 1;
+                    boolean hasRight = col + 1 < columns && grid[row][col+1] == 1;
+                    boolean hasBellow = row + 1 < rows && grid[row+1][col] == 1;
+                    boolean hayDiagonal = col + 1 < columns && row + 1 < rows  && grid[row+1][col+1] == 1;
 
-                    //Comprobamos que no hay parque a arriba y en la diagonal
-                    //Si lo hay, el parque que tengamos a la derecha ya lo abremos contado
-                    //Y sólo miramos los parques que están conectados una vez
-                    boolean hayArriba = i-1 >= 0 && grid[i-1][j] == 1;
-                    boolean hayDiagonal = i-1 >= 0 && grid[i-1][j] == 1 && j+1 < columns && grid[i-1][j+1] == 1;
-
-                    if(hayDebajo) {
+                    if (hasRight) {
                         links++;
                     }
-
-                    if(hayDerecha && !(hayArriba && hayDiagonal)) {
+                    if (hasBellow) {
                         links++;
+                        if (hayDiagonal && hasRight) {
+                            links--;
+                        }
                     }
                 }
             }
         }
 
-        System.out.println("Parks: " + parks + " - Links: " + links);
-
-        return parks - links;
+        parks -= links;
+        return parks;
     }
 
-    public static void printTestCase(int testCase, int rows, int columns, int[][] grid, int expected) {
+    private static void printTestCase(int testCase, int rows, int columns, int[][] grid, int expected) {
         System.out.println("Testcase " + testCase + ":");
 
         for (int i = 0; i < rows; i++) {
